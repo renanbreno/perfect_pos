@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:perfect_pos/controllers/system_status_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:perfect_pos/controllers/customercontroller.dart';
 import 'package:perfect_pos/controllers/salecontroller.dart';

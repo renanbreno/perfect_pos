@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:perfect_pos/components/ProductCatalog/product_catalog.dart';
 import 'package:perfect_pos/providers/product_provider.dart';
 import 'package:perfect_pos/styles/theme/theme.dart';
+import 'dart:async';
 
 class ContentCatalogTab extends StatefulWidget {
   const ContentCatalogTab({Key? key}) : super(key: key);
@@ -13,13 +14,28 @@ class ContentCatalogTab extends StatefulWidget {
 }
 
 class _ContentCatalogTab extends State<ContentCatalogTab> {
-  // final ProductsController productsController = ProductsController();
+  Timer? _debounce;
+
   final formatCurrency =
       NumberFormat.simpleCurrency(locale: "pt_BR", decimalDigits: 2);
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     final products = Provider.of<ProductProvider>(context);
+
+    onSearchChanged(String query) {
+      if (_debounce?.isActive ?? false) _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+        products.byName(query);
+      });
+    }
 
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight - 24) / 3;
@@ -28,6 +44,8 @@ class _ContentCatalogTab extends State<ContentCatalogTab> {
     return Column(
       children: [
         TextFormField(
+          controller: _searchController,
+          onChanged: (query) => onSearchChanged(query),
           decoration: const InputDecoration(
               prefixIcon: Icon(
                 Icons.search,
@@ -43,12 +61,27 @@ class _ContentCatalogTab extends State<ContentCatalogTab> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
-              itemCount: products.count,
+              itemCount: _searchController.text != ""
+                  ? products.filteredCount
+                  : products.count,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: itemWidth / itemHeight,
                   crossAxisSpacing: 10),
               itemBuilder: (context, index) {
+                if (_searchController.text.isNotEmpty) {
+                  return ProductCatalog(
+                    index: index,
+                    productID:
+                        products.filteredProducts.elementAt(index).productID,
+                    productPrice:
+                        products.filteredProducts.elementAt(index).productPrice,
+                    productName:
+                        products.filteredProducts.elementAt(index).productName,
+                    productImage:
+                        products.filteredProducts.elementAt(index).productImage,
+                  );
+                }
                 return ProductCatalog(
                   index: index,
                   productID: products.byIndex(index).productID,
