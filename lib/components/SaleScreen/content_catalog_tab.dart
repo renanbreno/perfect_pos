@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:perfect_pos/components/EmptyState/emtpy_state.dart';
 import 'package:provider/provider.dart';
 import 'package:perfect_pos/components/ProductCatalog/product_catalog.dart';
 import 'package:perfect_pos/providers/product_provider.dart';
@@ -60,38 +61,48 @@ class _ContentCatalogTab extends State<ContentCatalogTab> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: GridView.builder(
-              itemCount: _searchController.text != ""
-                  ? products.filteredCount
-                  : products.count,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: itemWidth / itemHeight,
-                  crossAxisSpacing: 10),
-              itemBuilder: (context, index) {
-                if (_searchController.text.isNotEmpty) {
-                  return ProductCatalog(
-                    index: index,
-                    productID:
-                        products.filteredProducts.elementAt(index).productID,
-                    productPrice:
-                        products.filteredProducts.elementAt(index).productPrice,
-                    productName:
-                        products.filteredProducts.elementAt(index).productName,
-                    productImage:
-                        products.filteredProducts.elementAt(index).productImage,
-                  );
-                }
-                return ProductCatalog(
-                  index: index,
-                  productID: products.byIndex(index).productID,
-                  productPrice: products.byIndex(index).productPrice,
-                  productName: products.byIndex(index).productName,
-                  productImage: products.byIndex(index).productImage,
-                );
-              },
-              shrinkWrap: true,
-            ),
+            child:
+                products.filteredCount == 0 && _searchController.text.isNotEmpty
+                    ? const EmptyState(
+                        image: "assets/no-search-result.svg",
+                        title: "Ops... não encontramos nenhum produto",
+                        subtitle: "Confira se o nome pesquisado está correto")
+                    : GridView.builder(
+                        itemCount: _searchController.text != ""
+                            ? products.filteredCount
+                            : products.count,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: itemWidth / itemHeight,
+                            crossAxisSpacing: 10),
+                        itemBuilder: (context, index) {
+                          if (_searchController.text.isNotEmpty) {
+                            return ProductCatalog(
+                              index: index,
+                              productID: products.filteredProducts
+                                  .elementAt(index)
+                                  .productID,
+                              productPrice: products.filteredProducts
+                                  .elementAt(index)
+                                  .productPrice,
+                              productName: products.filteredProducts
+                                  .elementAt(index)
+                                  .productName,
+                              productImage: products.filteredProducts
+                                  .elementAt(index)
+                                  .productImage,
+                            );
+                          }
+                          return ProductCatalog(
+                            index: index,
+                            productID: products.byIndex(index).productID,
+                            productPrice: products.byIndex(index).productPrice,
+                            productName: products.byIndex(index).productName,
+                            productImage: products.byIndex(index).productImage,
+                          );
+                        },
+                        shrinkWrap: true,
+                      ),
           ),
         )
       ],

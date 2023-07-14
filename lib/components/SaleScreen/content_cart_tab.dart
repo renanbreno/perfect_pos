@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:perfect_pos/components/EmptyState/emtpy_state.dart';
 import 'package:provider/provider.dart';
 import 'package:perfect_pos/components/CustomerBar/customer_bar.dart';
 import 'package:perfect_pos/components/ProductList/product_list.dart';
@@ -81,7 +82,13 @@ class _ContentCartCardState extends State<ContentCartTab> {
             ],
           ),
         ),
-        ProductList(),
+        context.watch<SaleController>().countProducts == 0
+            ? const EmptyState(
+                image: "assets/no-items-cart.svg",
+                title: "Não existe produto na venda",
+                subtitle: "Navegue até o catálogo e inclua um produto",
+              )
+            : ProductList(),
       ],
     );
   }
