@@ -4,21 +4,12 @@ import 'package:perfect_pos/components/CustomerInput/customer_input.dart';
 import 'package:perfect_pos/controllers/customercontroller.dart';
 import 'package:perfect_pos/styles/theme/theme.dart';
 
-class CustomerBar extends StatefulWidget {
-  @override
-  State<CustomerBar> createState() => _CustomerBarState();
-}
-
-class _CustomerBarState extends State<CustomerBar> {
-  late CustomerController customerController;
-
+class CustomerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    customerController = Provider.of<CustomerController>(context);
-
     return GestureDetector(
       onTap: () => customerInput(context, (String customerName) {
-        customerController.setCustomerName(customerName);
+        context.read<CustomerController>().setCustomerName(customerName);
       }),
       child: Container(
         width: double.maxFinite,
@@ -40,9 +31,9 @@ class _CustomerBarState extends State<CustomerBar> {
               children: [
                 const Icon(Icons.person),
                 Text(
-                  customerController.customerName == ''
+                  context.watch<CustomerController>().customerName == ""
                       ? "Toque para informar um cliente"
-                      : customerController.customerName,
+                      : context.watch<CustomerController>().customerName,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       color: UITheme.coraColorBrandDark,
