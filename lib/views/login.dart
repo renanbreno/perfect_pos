@@ -115,6 +115,8 @@ class Login extends StatelessWidget {
                           child: const Text('Entrar'),
                           onPressed: () {
                             if (isValidUser()) {
+                              emailController.text = "";
+                              passwordController.text = "";
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
