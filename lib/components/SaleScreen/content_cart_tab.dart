@@ -19,6 +19,7 @@ class _ContentCartCardState extends State<ContentCartTab> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> status = context.watch<SaleController>().status;
     return Column(
       children: [
         CustomerBar(),
@@ -47,22 +48,15 @@ class _ContentCartCardState extends State<ContentCartTab> {
                         style: const TextStyle(
                             fontSize: 42, fontWeight: FontWeight.bold),
                       ),
-                      Visibility(
-                          visible: false,
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 4,
-                            children: [
-                              const Icon(Icons.attach_money),
-                              Text(
-                                'Sua economia foi de ${formatCurrency.format(0)}',
-                                style: const TextStyle(
-                                    color: UITheme.semanticSuccessDarker,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                              )
-                            ],
-                          ))
+                      Text(
+                        status.contains("venda_aberta")
+                            ? "Cupom aberto"
+                            : "Cupom fechado",
+                        style: const TextStyle(
+                            color: UITheme.semanticSuccessDarker,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      )
                     ],
                   )
                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:perfect_pos/controllers/system_status_controller.dart';
 import 'package:perfect_pos/providers/product_provider.dart';
 import 'package:perfect_pos/models/sale_list_items.dart';
 
@@ -8,6 +9,10 @@ class SaleController extends ChangeNotifier {
   final List<SaleListModel> _products = [];
 
   addProduct(String productID) {
+    if (!SystemStatusController.instance.status().contains("venda_aberta")) {
+      SystemStatusController.instance.add("venda_aberta");
+    }
+
     _products.add(SaleListModel(
         productID: productID,
         productImage: "assets/product.png",
@@ -20,7 +25,18 @@ class SaleController extends ChangeNotifier {
 
   removeProduct(int index) {
     _products.removeAt(index);
+
+    bool existsItemsOnSale = checkIfExistsItemsOnSale();
+
+    if (!existsItemsOnSale) {
+      finishSale();
+    }
+
     notifyListeners();
+  }
+
+  finishSale() {
+    SystemStatusController.instance.add("venda_fechada");
   }
 
   increaseQuantity(int index) {
@@ -41,6 +57,10 @@ class SaleController extends ChangeNotifier {
 
     _products.elementAt(index).productQuantity = currentQuantity - 1;
     notifyListeners();
+  }
+
+  bool checkIfExistsItemsOnSale() {
+    return _products.isNotEmpty;
   }
 
   addDiscount() {}
@@ -73,4 +93,6 @@ class SaleController extends ChangeNotifier {
 
     return element.productID.isNotEmpty;
   }
+
+  List<String> status = SystemStatusController.instance.status();
 }
