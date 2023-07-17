@@ -1,21 +1,55 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:perfect_pos/controllers/auth_controller_cognito.dart';
 
-import 'package:perfect_pos/views/home.dart';
 import 'package:perfect_pos/styles/theme/theme.dart';
-
-import 'package:perfect_pos/controllers/authcontroller.dart';
+import 'package:perfect_pos/views/home.dart';
+import 'package:perfect_pos/views/sign_up.dart';
 
 final _formKey = GlobalKey<FormState>();
-TextEditingController emailController = TextEditingController();
+TextEditingController userNameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
-bool isValidUser() =>
-    AuthController().isValidUser(emailController.text, passwordController.text);
-
 class Login extends StatelessWidget {
+  const Login({super.key});
+
   @override
   Widget build(BuildContext context) {
+    void clearFields() {
+      userNameController.text = "";
+      passwordController.text = "";
+    }
+
+    handleSignInResult(SignInResult result) {
+      if (result.isSignedIn) {
+        clearFields();
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) =>
+                Home(userName: userNameController.text),
+            transitionDuration: const Duration(milliseconds: 400),
+            transitionsBuilder: (_, a, __, c) =>
+                FadeTransition(opacity: a, child: c),
+          ),
+        );
+      }
+    }
+
+    handleSignInError(String message) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    }
+
+    handleSignIn() {
+      AuthControllerCognito.instance.signInUser(
+          username: userNameController.text,
+          password: passwordController.text,
+          onSignInResult: handleSignInResult,
+          onSignInError: handleSignInError);
+    }
+
     return Scaffold(
       body: Center(
         child: ListView(children: [
@@ -25,7 +59,7 @@ class Login extends StatelessWidget {
             semanticsLabel: "top",
           ),
           const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,7 +86,7 @@ class Login extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 16),
                       child: TextFormField(
-                        controller: emailController,
+                        controller: userNameController,
                         decoration: const InputDecoration(
                             prefixIcon: Icon(
                               Icons.person,
@@ -100,41 +134,58 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 16),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              textStyle: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                              foregroundColor: Colors.white,
-                              backgroundColor: UITheme.coraColorBrandMedium,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                              elevation: 15),
-                          child: const Text('Entrar'),
-                          onPressed: () {
-                            if (isValidUser()) {
-                              emailController.text = "";
-                              passwordController.text = "";
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => Home(),
-                                  transitionDuration:
-                                      const Duration(milliseconds: 400),
-                                  transitionsBuilder: (_, a, __, c) =>
-                                      FadeTransition(opacity: a, child: c),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Login ou senha incorretos')));
-                            }
-                          },
-                        ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent),
+                              child: const Text('Não sou cadastrado'),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) => SignUp(),
+                                    transitionDuration:
+                                        const Duration(milliseconds: 400),
+                                    transitionsBuilder: (_, a, __, c) =>
+                                        FadeTransition(opacity: a, child: c),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: UITheme.coraColorBrandMedium,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  elevation: 15),
+                              child: const Text('Entrar'),
+                              onPressed: () {
+                                handleSignIn();
+                              },
+                            ),
+                          )
+                        ],
                       ),
                     )
                   ],

@@ -8,8 +8,9 @@ import 'package:perfect_pos/views/sale_screen.dart';
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
   var functionOptions = options;
+  final String userName;
 
-  Home({super.key});
+  Home({Key? key, required this.userName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,15 @@
 import 'package:perfect_pos/components/MetricsHomeCard/metrics_home_card.dart';
-import 'package:perfect_pos/controllers/authcontroller.dart';
 import 'package:perfect_pos/styles/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class HomeHeader extends StatefulWidget {
+  const HomeHeader({super.key});
+
   @override
   State<HomeHeader> createState() => HomeHeaderState();
 }
 
 class HomeHeaderState extends State<HomeHeader> {
-  final AuthController _authController = AuthController();
-
   bool visibleValues = false;
 
   @override
@@ -30,10 +29,10 @@ class HomeHeaderState extends State<HomeHeader> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Bom dia, ",
                       style: TextStyle(
                           color: Colors.white,
@@ -41,8 +40,8 @@ class HomeHeaderState extends State<HomeHeader> {
                           fontSize: 24),
                     ),
                     Text(
-                      _authController.userName,
-                      style: const TextStyle(
+                      "pegar o nome",
+                      style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 24),

@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-perfectpos-dev-115514-authRole",
+      "UnauthRoleArn": "arn:aws:iam::623650351142:role/amplify-perfectpos-dev-115514-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::623650351142:role/amplify-perfectpos-dev-115514-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-perfectpos-dev-115514-deployment",
+      "UnauthRoleName": "amplify-perfectpos-dev-115514-unauthRole",
+      "StackName": "amplify-perfectpos-dev-115514",
+      "StackId": "arn:aws:cloudformation:us-east-1:623650351142:stack/amplify-perfectpos-dev-115514/9cfc68d0-231f-11ee-8b0b-0e3768ed2c1b",
+      "AmplifyAppId": "d4v70tprry1ga"
+    },
+    "categories": {
+      "auth": {
+        "perfectpos63c173d1": {}
+      }
+    }
+  }
+}
