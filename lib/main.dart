@@ -3,7 +3,6 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:perfect_pos/amplifyconfiguration.dart';
-import 'package:perfect_pos/views/home.dart';
 import 'package:provider/provider.dart';
 import 'package:perfect_pos/controllers/customercontroller.dart';
 import 'package:perfect_pos/controllers/salecontroller.dart';
@@ -44,7 +43,7 @@ class SaleSystem extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           // useMaterial3: true,
         ),
-        home: Login(),
+        home: const Login(),
       ),
     );
   }

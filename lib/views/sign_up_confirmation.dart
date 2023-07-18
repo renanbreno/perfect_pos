@@ -5,7 +5,7 @@ import 'package:perfect_pos/controllers/auth_controller_cognito.dart';
 import 'package:perfect_pos/styles/theme/theme.dart';
 import 'package:perfect_pos/views/home.dart';
 
-final _formKey = GlobalKey<FormState>();
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 TextEditingController confirmationCodeController = TextEditingController();
 
 class SignUpConfirmation extends StatelessWidget {

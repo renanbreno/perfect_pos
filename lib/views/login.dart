@@ -7,7 +7,7 @@ import 'package:perfect_pos/styles/theme/theme.dart';
 import 'package:perfect_pos/views/home.dart';
 import 'package:perfect_pos/views/sign_up.dart';
 
-final _formKey = GlobalKey<FormState>();
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 TextEditingController userNameController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
